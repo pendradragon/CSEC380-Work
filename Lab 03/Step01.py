@@ -20,10 +20,11 @@ def calibrate():
   client.send(request.encode())
   #response parsing
   httpresponse = client.recv(8192)
+  print(f"Encoded Response: {httpresponse}")
   response = httpresponse.decode()
 
   client.close()
-  print(response)
+  print(f"Decoded Response: {response}")
 
 if __name__ == "__main__":
   calibrate()
