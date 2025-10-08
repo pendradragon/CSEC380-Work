@@ -1,0 +1,11 @@
+version: '3.9'  # Docker Compose version
+
+services:
+  web:
+    image: httpd:latest       # Use the latest official Apache HTTPD image
+    container_name: apache_web
+    ports:
+      - "80:80"               # Map host port 80 to container port 80
+    volumes:
+      - ./html:/usr/local/apache2/htdocs/  # Mount local ./html folder as web root
+    restart: unless-stopped    # Automatically restart unless stopped
