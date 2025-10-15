@@ -6,10 +6,10 @@ services:
     container_name: dvwa-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: passward
       MYSQL_DATABASE: dvwa
       MYSQL_USER: dvwa
-      MYSQL_PASSWORD: dvwa
+      MYSQL_PASSWORD: password
     volumes:
       - db_data:/var/lib/mysql
 
@@ -20,7 +20,7 @@ services:
     environment:
       - DB_SERVER=db
       - MYSQL_USER=dvwa
-      - MYSQL_PASSWORD=dvwa
+      - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=dvwa
     depends_on:
       - db
