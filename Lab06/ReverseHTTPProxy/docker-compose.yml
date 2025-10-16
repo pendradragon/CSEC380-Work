@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports:
+      - "8080:80" #port 80 is being used by another container from the last lab
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+      - MYSQL_ROOT_PASSWORD=password
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db: 
+    image: mysql:5.7
+    container_name: dvwa-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+    volumes: 
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  reverse-proxy:
+    build: ./reverse-proxy #builds the entire sub-directory
+    container_name: backwards_proxy
+    depends_on:
+      - dvwa
+    ports:
+      - "443:443"
+
+volumes:
+  db_data:
