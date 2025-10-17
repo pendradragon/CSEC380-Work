@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports: 
+      - "8080:80"
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+      - MYSQL_ROOT_PASSWORD=password
+    depends_on: 
+      - db
+    expose:
+      - 80
+    restart: unless-stopped
+
+  db:
+    image: mysql:5.7
+    container: dvwa-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=dvwa
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  modsec:
+    image: owasp/modsecurity-crs:apache
+    container_name: modsec-proxy
+    environment:
+      # proxy target -- internal network DNS
+      - BACKEND=http://dvwa:443
+      - BLOCKING_PARANOIA=1 #setting as low as possible so I can capture all of the packets for this lab
+      - PORT=8081
+    volumes:
+      - ./modsec-logs:/var/logs/modsecurity
+    ports:
+      - "443:443"
+    depends_on:
+      - dvwa
+    restart: unless-stopped
+
+volumes:
+  db_data:
