@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: qdpm-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: qdpm
+      MYSQL_USER: qdpmuser
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+
+  web:
+    build: ./web
+    container_name: qdpm-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
